@@ -469,6 +469,12 @@ namespace LineFollower {
 
     let speed = 20
 
+    //% block="stop"
+    //% block.loc.nl="stop"
+    export function stop() {
+        CutebotPro.twoWheelStop()
+    }
+
     //% block="steer %dir"
     //% block.loc.nl="stuur %dir"
     export function steer(dir: Steer) {
