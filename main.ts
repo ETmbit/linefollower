@@ -562,11 +562,11 @@ namespace LineFollower {
     export function onTrackPosition(track: Track, code: () => void) {
         switch (track) {
             case Track.OffTrack: onOffTrack = code; break
-            case Track.FarLeft: onFarRight = code; break
-            case Track.Left: onRight = code; break
+            case Track.FarLeft: onFarLeft = code; break
+            case Track.Left: onLeft = code; break
             case Track.Mid: onOnTrack = code; break
-            case Track.Right: onLeft = code; break
-            case Track.FarRight: onFarLeft = code; break
+            case Track.Right: onRight = code; break
+            case Track.FarRight: onFarRight = code; break
         }
     }
 }
