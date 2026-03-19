@@ -50,7 +50,7 @@ enum Track {
     //% block.loc.nl="van de lijn af"
     OffTrack = 0,
     //% block="almost at right off the track"
-    //% block.loc.nl="bijna rechts van de lijn af"
+    //% block.loc.nl="bijna rechts van de lijn"
     FarLeft = 1,
     //% block="right on the track"
     //% block.loc.nl="rechts op de lijn"
@@ -62,7 +62,7 @@ enum Track {
     //% block.loc.nl="links op de lijn"
     Right = 8,
     //% block="almost at left off the track"
-    //% block.loc.nl="bijna links van de lijn af"
+    //% block.loc.nl="bijna links van de lijn"
     FarRight = 16,
 }
 
@@ -462,44 +462,32 @@ let onLeft: handler
 let onRight: handler
 let onFarRight: handler
 
-let ETspeed = 20
-
-basic.forever(function() {
-    let track = CutebotPro.readTrack()
-    switch (track) {
-        case Track.OffTrack: CutebotPro.twoWheelStop(); break
-        case Track.FarLeft: CutebotPro.twoWheelSpeed(ETspeed, 0); break
-        case Track.Left: CutebotPro.twoWheelSpeed(ETspeed, ETspeed/2); break
-        case Track.Mid: CutebotPro.twoWheelSpeed(ETspeed, ETspeed); break
-        case Track.Right: CutebotPro.twoWheelSpeed(ETspeed/2, ETspeed); break
-        case Track.FarRight: CutebotPro.twoWheelSpeed(0, ETspeed); break
-    }
-})
-
 //% color="#00CC00" icon="\uf1b9"
 //% block="LineFollower"
 //% block.loc.nl="LijnVolger"
-namespace LineFollow {
+namespace LineFollower {
+
+    let speed = 20
 
     //% block="steer %dir"
     //% block.loc.nl="stuur %dir"
     export function steer(dir: Steer) {
         switch (dir) {
-            case Steer.SharpLeft: CutebotPro.twoWheelSpeed(ETspeed, 0); break
-            case Steer.Left: CutebotPro.twoWheelSpeed(ETspeed, ETspeed/4); break
-            case Steer.SlightLeft: CutebotPro.twoWheelSpeed(ETspeed, ETspeed/2); break
-            case Steer.Straight: CutebotPro.twoWheelSpeed(ETspeed, ETspeed); break
-            case Steer.SlightRight: CutebotPro.twoWheelSpeed(ETspeed / 2, ETspeed); break
-            case Steer.Right: CutebotPro.twoWheelSpeed(ETspeed / 4, ETspeed); break
-            case Steer.SharpRight: CutebotPro.twoWheelSpeed(0, ETspeed); break
+            case Steer.SharpRight: CutebotPro.twoWheelSpeed(speed, 0); break
+            case Steer.Right: CutebotPro.twoWheelSpeed(speed, speed/4); break
+            case Steer.SlightRight: CutebotPro.twoWheelSpeed(speed, speed/2); break
+            case Steer.Straight: CutebotPro.twoWheelSpeed(speed, speed); break
+            case Steer.SlightLeft: CutebotPro.twoWheelSpeed(speed / 2, speed); break
+            case Steer.Left: CutebotPro.twoWheelSpeed(speed / 4, speed); break
+            case Steer.SharpLeft: CutebotPro.twoWheelSpeed(0, speed); break
         }
     }
 
-    //% block="set speed to %speed"
-    //% block.loc.nl="stel de snelheid in op %speed"
-    //% speed.min=0 speed.max=100 speed.defl=20
-    export function setSpeed(speed: number) {
-        ETspeed = speed
+    //% block="set speed to %newspeed"
+    //% block.loc.nl="stel de snelheid in op %newspeed"
+    //% newspeed.min=0 newspeed.max=100 newspeed.defl=20
+    export function setSpeed(newspeed: number) {
+        speed = newspeed
     }
 
     //% block="the buggy is %track"
