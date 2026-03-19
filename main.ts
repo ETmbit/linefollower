@@ -462,38 +462,47 @@ let onLeft: handler
 let onRight: handler
 let onFarRight: handler
 
+let EToldSteer = Steer.Straight
+let ETsteer = -1
+let ETspeed = 20
+
+basic.forever(function() {
+    if (ETsteer == EToldSteer) return
+    switch (ETsteer) {
+        case -1: CutebotPro.twoWheelStop(); break
+        case Steer.SharpRight: CutebotPro.twoWheelSpeed(ETspeed, 0); break
+        case Steer.Right: CutebotPro.twoWheelSpeed(ETspeed, ETspeed / 4); break
+        case Steer.SlightRight: CutebotPro.twoWheelSpeed(ETspeed, ETspeed / 2); break
+        case Steer.Straight: CutebotPro.twoWheelSpeed(ETspeed, ETspeed); break
+        case Steer.SlightLeft: CutebotPro.twoWheelSpeed(ETspeed / 2, ETspeed); break
+        case Steer.Left: CutebotPro.twoWheelSpeed(ETspeed / 4, ETspeed); break
+        case Steer.SharpLeft: CutebotPro.twoWheelSpeed(0, ETspeed); break
+    }
+    EToldSteer = ETsteer
+})
+
 //% color="#00CC00" icon="\uf1b9"
 //% block="LineFollower"
 //% block.loc.nl="LijnVolger"
 namespace LineFollower {
 
-    let speed = 20
-
     //% block="stop"
     //% block.loc.nl="stop"
     export function stop() {
-        CutebotPro.twoWheelStop()
+        ETsteer = -1
     }
 
-    //% block="steer %dir"
-    //% block.loc.nl="stuur %dir"
-    export function steer(dir: Steer) {
-        switch (dir) {
-            case Steer.SharpRight: CutebotPro.twoWheelSpeed(speed, 0); break
-            case Steer.Right: CutebotPro.twoWheelSpeed(speed, speed/4); break
-            case Steer.SlightRight: CutebotPro.twoWheelSpeed(speed, speed/2); break
-            case Steer.Straight: CutebotPro.twoWheelSpeed(speed, speed); break
-            case Steer.SlightLeft: CutebotPro.twoWheelSpeed(speed / 2, speed); break
-            case Steer.Left: CutebotPro.twoWheelSpeed(speed / 4, speed); break
-            case Steer.SharpLeft: CutebotPro.twoWheelSpeed(0, speed); break
-        }
+    //% block="steer %steer"
+    //% block.loc.nl="stuur %steer"
+    export function steer(steer: Steer) {
+        ETsteer = steer
     }
 
-    //% block="set speed to %newspeed"
-    //% block.loc.nl="stel de snelheid in op %newspeed"
-    //% newspeed.min=0 newspeed.max=100 newspeed.defl=20
-    export function setSpeed(newspeed: number) {
-        speed = newspeed
+    //% block="set speed to %speed"
+    //% block.loc.nl="stel de snelheid in op %speed"
+    //% speed.min=0 speed.max=100 speed.defl=20
+    export function setSpeed(speed: number) {
+        ETspeed = speed
     }
 
     //% block="the buggy is %track"
