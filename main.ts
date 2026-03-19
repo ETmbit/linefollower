@@ -152,11 +152,11 @@ namespace Servo {
 /////////////////////
 
 enum Led {
-    //% block="left led"
-    //% block.loc.nl="linker led"
+    //% block="the left led"
+    //% block.loc.nl="de linker led"
     Left,
-    //% block="right led"
-    //% block.loc.nl="rechter led"
+    //% block="the right led"
+    //% block.loc.nl="de rechter led"
     Right,
     //% block="both leds"
     //% block.loc.nl="beide leds"
@@ -462,23 +462,20 @@ let onLeft: handler
 let onRight: handler
 let onFarRight: handler
 
-let EToldSteer = Steer.Straight
-let ETsteer = -1
-let ETspeed = 20
+let ETtrack = Track.OffTrack
 
 basic.forever(function() {
-    if (ETsteer == EToldSteer) return
-    switch (ETsteer) {
-        case -1: CutebotPro.twoWheelStop(); break
-        case Steer.SharpRight: CutebotPro.twoWheelSpeed(ETspeed, 0); break
-        case Steer.Right: CutebotPro.twoWheelSpeed(ETspeed, ETspeed / 4); break
-        case Steer.SlightRight: CutebotPro.twoWheelSpeed(ETspeed, ETspeed / 2); break
-        case Steer.Straight: CutebotPro.twoWheelSpeed(ETspeed, ETspeed); break
-        case Steer.SlightLeft: CutebotPro.twoWheelSpeed(ETspeed / 2, ETspeed); break
-        case Steer.Left: CutebotPro.twoWheelSpeed(ETspeed / 4, ETspeed); break
-        case Steer.SharpLeft: CutebotPro.twoWheelSpeed(0, ETspeed); break
+    let track = CutebotPro.readTrack()
+    if (track == ETtrack) return
+    ETtrack = track
+    switch (ETtrack) {
+        case Track.OffTrack: onOffTrack(); break
+        case Track.FarLeft: onFarLeft(); break
+        case Track.Left: onLeft(); break
+        case Track.Mid: onOnTrack(); break
+        case Track.Right: onRight(); break
+        case Track.FarRight: onFarRight(); break
     }
-    EToldSteer = ETsteer
 })
 
 //% color="#00CC00" icon="\uf1b9"
@@ -486,23 +483,57 @@ basic.forever(function() {
 //% block.loc.nl="LijnVolger"
 namespace LineFollower {
 
+    let speed = 20
+
+    //% block="turn %leds off"
+    //% block.loc.nl="zet %leds uit"
+    export function ledsOff(leds: Led) {
+        CutebotPro.ledColor(leds, Color.Black)
+    }
+
+    //% block="flash %leds %cnt times %color"
+    //% block.loc.nl="knipper %leds %cnt keer %color"
+    export function ledsFlash(leds: Led, cnt: number, color: Color) {
+        CutebotPro.ledFlash(leds,color,Pace.Normal,cnt)
+    }
+
+    //% block="show a %pace rainbow with %leds"
+    //% block.loc.nl="maak een %pace regenboog met %leds"
+    export function ledsRainbow(pace: Pace, leds: Led) {
+        CutebotPro.ledRainbow(leds, pace)
+    }
+
+    //% block="color %leds %color"
+    //% block.loc.nl="kleur %leds %color"
+    export function ledsColor(leds: Led, color: Color) {
+        CutebotPro.ledColor(leds, color)
+    }
+
     //% block="stop"
     //% block.loc.nl="stop"
     export function stop() {
-        ETsteer = -1
+        CutebotPro.twoWheelStop()
     }
 
     //% block="steer %steer"
     //% block.loc.nl="stuur %steer"
     export function steer(steer: Steer) {
-        ETsteer = steer
+        switch (steer) {
+            case Steer.SharpLeft: CutebotPro.twoWheelSpeed(0, speed); break
+            case Steer.Left: CutebotPro.twoWheelSpeed(speed/2, speed); break
+            case Steer.SlightLeft: CutebotPro.twoWheelSpeed(speed/1.5, speed); break
+            case Steer.Straight: CutebotPro.twoWheelSpeed(speed, speed); break
+            case Steer.SlightRight: CutebotPro.twoWheelSpeed(speed, speed/1.5); break
+            case Steer.Right: CutebotPro.twoWheelSpeed(speed, speed/2); break
+            case Steer.SharpRight: CutebotPro.twoWheelSpeed(speed, 0); break
+        }
     }
 
-    //% block="set speed to %speed"
-    //% block.loc.nl="stel de snelheid in op %speed"
-    //% speed.min=0 speed.max=100 speed.defl=20
-    export function setSpeed(speed: number) {
-        ETspeed = speed
+    //% block="set speed to %newspeed"
+    //% block.loc.nl="stel de snelheid in op %newspeed"
+    //% newspeed.min=0 newspeed.max=100 newspeed.defl=20
+    export function setSpeed(newspeed: number) {
+        speed = newspeed
     }
 
     //% block="the buggy is %track"
@@ -531,10 +562,10 @@ namespace LineFollower {
     export function onTrackPosition(track: Track, code: () => void) {
         switch (track) {
             case Track.OffTrack: onOffTrack = code; break
-            case Track.FarLeft: onFarLeft = code; break
-            case Track.Left: onLeft = code; break
+            case Track.FarLeft: onFarRight = code; break
+            case Track.Left: onRight = code; break
             case Track.Mid: onOnTrack = code; break
-            case Track.Right: onRight = code; break
+            case Track.Right: onLeft = code; break
             case Track.FarRight: onFarLeft = code; break
         }
     }
