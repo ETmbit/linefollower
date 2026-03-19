@@ -537,7 +537,7 @@ namespace LineFollower {
     }
 
     //% block="the buggy is %track"
-    //% block.loc.nl="de buggy is %track"
+    //% block.loc.nl="de buggy %track is"
     export function isTrackPosition(track: Track) : boolean {
         switch (track) {
             case Track.OffTrack: return CutebotPro.isOffTrack()
