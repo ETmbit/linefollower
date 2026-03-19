@@ -469,12 +469,12 @@ basic.forever(function() {
     if (track == ETtrack) return
     ETtrack = track
     switch (ETtrack) {
-        case Track.OffTrack: onOffTrack(); break
-        case Track.FarLeft: onFarLeft(); break
-        case Track.Left: onLeft(); break
-        case Track.Mid: onOnTrack(); break
-        case Track.Right: onRight(); break
-        case Track.FarRight: onFarRight(); break
+        case Track.OffTrack: if (onOffTrack) onOffTrack(); break
+        case Track.FarLeft: if (onFarLeft) onFarLeft(); break
+        case Track.Left: if (onLeft) onLeft(); break
+        case Track.Mid: if (onOnTrack) onOnTrack(); break
+        case Track.Right: if (onRight) onRight(); break
+        case Track.FarRight: if (onFarRight) onFarRight(); break
     }
 })
 
