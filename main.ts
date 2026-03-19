@@ -363,7 +363,7 @@ namespace CutebotPro {
 
     export function isTrackAtLeft(): boolean {
         let track = readTrack()
-        return (track == Track.Left || track == Track.FarLeft)
+        return (track == Track.Left)
     }
 
     export function isTrackFarRight(): boolean {
@@ -373,7 +373,7 @@ namespace CutebotPro {
 
     export function isTrackAtRight(): boolean {
         let track = readTrack()
-        return (track == Track.Right || track == Track.FarRight)
+        return (track == Track.Right)
     }
 
     export function isOnTrack(): boolean {
